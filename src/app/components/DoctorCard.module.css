@@ -1,44 +1,26 @@
 .card {
-  background-color: var(--background-white);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-light);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Add transition */
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .card:hover {
-  transform: translateY(-2px); /* Slight lift on hover */
-  box-shadow: var(--shadow-medium); /* Increase shadow on hover */
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.cardContent { /* New style for top section */
+.cardContent {
   display: flex;
-  justify-content: space-between; /* Push left and right sections apart */
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.leftSection {
+  display: flex;
   gap: 16px;
-}
-
-.leftSection { /* New style for avatar and main info */
-  display: flex;
-  gap: 16px;
-  flex-grow: 1; /* Allow left section to take available space */
-}
-
-.rightSection { /* New style for fee and button */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end; /* Align items to the right */
-  justify-content: space-between; /* Space out fee and button */
-  flex-shrink: 0; /* Prevent right section from shrinking */
-  min-width: 150px; /* Ensure enough space for button */
-}
-
-.cardHeader { /* Removed - replaced by leftSection */
-  /* display: flex; */
-  /* gap: 16px; */
-  /* margin-bottom: 16px; */
 }
 
 .avatar {
@@ -46,9 +28,15 @@
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
-  flex-shrink: 0;
-  position: relative; /* Needed for absolute positioning of fallback */
-  background-color: #eee; /* Background for avatar area */
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .avatar {
+  transform: scale(1.05);
 }
 
 .avatarImg {
@@ -57,146 +45,150 @@
   object-fit: cover;
 }
 
-.avatarInitials, .avatarInitialsOnError { /* Combined styles */
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #2a4b8d;
-  color: white;
+.avatarInitials {
   font-size: 24px;
   font-weight: bold;
-  position: absolute; /* Position fallback over image area */
-  top: 0;
-  left: 0;
+  color: #2a4b8d;
 }
 
 .avatarInitialsOnError {
-  /* Initially hidden, shown via JS if image fails */
+  font-size: 24px;
+  font-weight: bold;
+  color: #2a4b8d;
 }
 
-
 .doctorInfo {
-  flex-grow: 1;
-  display: flex; /* Use flexbox for vertical alignment */
-  flex-direction: column; /* Stack info vertically */
-  justify-content: center; /* Center info vertically if needed */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .doctorInfo h3 {
-  margin: 0 0 4px 0; /* Reduced bottom margin */
-  font-size: 16px; /* Slightly smaller name */
+  margin: 0;
+  font-size: 18px;
   color: #333;
-  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.card:hover .doctorInfo h3 {
+  color: #2a4b8d;
 }
 
 .specialty {
-  font-size: 13px; /* Kept size */
-  color: #555;
-  margin-bottom: 4px;
+  color: #666;
+  font-size: 14px;
 }
 
 .qualification {
-  font-size: 12px; /* Kept size */
-  color: #777;
-  margin-bottom: 4px;
+  color: #666;
+  font-size: 14px;
 }
 
 .experience {
-  font-size: 12px; /* Kept size */
-  color: #777;
-  margin-bottom: 0; /* Removed bottom margin */
+  color: #666;
+  font-size: 14px;
+  margin-top: 4px;
 }
 
-.languages { /* Style removed as element is removed */
-  /* font-size: 12px; */
-  /* color: #777; */
-  /* margin-top: 4px; */
-}
-
-.cardFooter { /* Removed - replaced by rightSection and clinicDetails */
-  /* display: flex; */
-  /* justify-content: space-between; */
-  /* align-items: center; */
-  /* margin-top: auto; */
-  /* border-top: 1px solid #eee; */
-  /* padding-top: 12px; */
-}
-
-.clinicDetails { /* New style for clinic info */
+.rightSection {
   display: flex;
-  gap: 16px; /* Space between clinic name and address */
-  border-top: 1px solid #eee; /* Add separator line */
-  padding-top: 12px; /* Add padding above */
-}
-
-.clinic { /* Removed - replaced by clinicDetails */
-  /* flex-grow: 1; */
-}
-
-.clinicName, .clinicAddress { /* Combined styles */
-  font-size: 13px; /* Matched size */
-  color: #555; /* Matched color */
-  display: flex;
-  align-items: center;
-}
-
-.clinicName {
-  font-weight: normal; /* Removed bold */
-  margin-bottom: 0; /* Removed margin */
-}
-
-.clinicAddress {
-  color: #555; /* Matched color */
-  margin-bottom: 0; /* Removed margin */
-}
-
-.consultation { /* Removed - replaced by rightSection */
-  /* text-align: right; */
-}
-
-.consultationTypes { /* Style kept if needed later */
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-  justify-content: flex-end;
-}
-
-.videoConsult, .inClinic { /* Styles kept if needed later */
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background-color: #e3f2fd;
-  color: #1976d2;
-}
-
-.inClinic {
-  background-color: #e8f5e9;
-  color: #388e3c;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
 }
 
 .fee {
   font-weight: bold;
   color: #333;
-  margin-bottom: 0; /* Removed margin */
-  text-align: right; /* Ensure fee aligns right */
-  font-size: 14px; /* Adjusted size */
+  font-size: 16px;
 }
 
 .bookButton {
-  background-color: transparent;
-  color: #2a4b8d; /* Blue text */
-  border: 1px solid #2a4b8d; /* Blue border */
+  background-color: #2a4b8d;
+  color: white;
+  border: none;
   border-radius: 4px;
   padding: 8px 16px;
-  cursor: pointer;
   font-weight: 500;
-  /* width: 100%; */ /* Removed width: 100% */
-  text-align: center;
-  white-space: nowrap; /* Prevent button text wrapping */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .bookButton:hover {
-  background-color: rgba(42, 75, 141, 0.1); /* Light blue hover */
+  background-color: #1a3a7c;
+  transform: scale(1.05);
+}
+
+.clinicDetails {
+  padding: 12px 16px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clinicName, .clinicAddress {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardContent {
+    padding: 12px;
+  }
+  
+  .leftSection {
+    gap: 12px;
+  }
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .doctorInfo h3 {
+    font-size: 16px;
+  }
+  
+  .specialty, .qualification, .experience {
+    font-size: 13px;
+  }
+  
+  .fee {
+    font-size: 14px;
+  }
+  
+  .bookButton {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  
+  .clinicDetails {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardContent {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .rightSection {
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
 }

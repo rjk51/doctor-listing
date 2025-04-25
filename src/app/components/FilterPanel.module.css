@@ -1,23 +1,30 @@
+/* Add these responsive styles to your FilterPanel.module.css */
 .filterPanelContainer {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.filterPanel, .sortPanel {
+.sortPanel, .filterPanel {
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.sortPanel:hover, .filterPanel:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .filterHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .filterHeader h2 {
@@ -30,55 +37,80 @@
   background: none;
   border: none;
   color: #2a4b8d;
-  font-size: 14px;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .clearAllButton:hover {
-  background-color: #f0f0f0;
+  color: #1a3a7c;
+  transform: scale(1.05);
 }
 
 .filterSection {
-  margin-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.filterSection:hover {
+  background-color: #f9f9f9;
 }
 
 .filterSection:last-child {
-  margin-bottom: 0;
+  border-bottom: none;
 }
 
 .sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 12px 16px;
   cursor: pointer;
-  padding: 8px 0;
+  transition: background-color 0.2s ease;
+}
+
+.sectionHeader:hover {
+  background-color: #f5f5f5;
 }
 
 .sectionHeader h3 {
   margin: 0;
   font-size: 16px;
-  color: #555;
+  color: #333;
 }
 
 .expandIcon {
   font-size: 18px;
-  font-weight: bold;
-  color: #2a4b8d;
-  transition: transform 0.2s ease;
+  color: #666;
+  transition: transform 0.3s ease, color 0.2s ease;
+}
+
+.expandIcon:hover {
+  color: #333;
 }
 
 .expanded {
-  transform: rotate(0deg);
+  transform: rotate(180deg);
 }
 
 .filterOptions {
+  padding: 8px 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
-  padding-left: 4px;
+  gap: 12px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .radioOption, .checkboxOption {
@@ -86,31 +118,74 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.radioOption input, .checkboxOption input {
-  cursor: pointer;
+.radioOption:hover, .checkboxOption:hover {
+  transform: translateX(3px);
 }
 
 .radioOption span, .checkboxOption span {
-  font-size: 14px;
-  color: #555;
+  color: #333;
 }
 
-.searchContainer {
-  margin-bottom: 12px;
-  width: 100%;
-}
-
-.specialtySearch {
+.searchInput {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
-  font-size: 14px;
+  margin-bottom: 12px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.searchInput:focus {
+  border-color: #2a4b8d;
+  box-shadow: 0 0 0 2px rgba(42, 75, 141, 0.2);
   outline: none;
 }
 
-.specialtySearch:focus {
-  border-color: #2a4b8d;
+/* Responsive styles */
+@media (max-width: 768px) {
+  .filterPanelContainer {
+    gap: 12px;
+  }
+  
+  .filterHeader {
+    padding: 12px;
+  }
+  
+  .filterHeader h2 {
+    font-size: 16px;
+  }
+  
+  .sectionHeader {
+    padding: 10px 12px;
+  }
+  
+  .sectionHeader h3 {
+    font-size: 14px;
+  }
+  
+  .filterOptions {
+    padding: 6px 12px 12px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filterHeader h2 {
+    font-size: 15px;
+  }
+  
+  .clearAllButton {
+    font-size: 12px;
+  }
+  
+  .sectionHeader h3 {
+    font-size: 13px;
+  }
+  
+  .radioOption span, .checkboxOption span {
+    font-size: 13px;
+  }
 }
