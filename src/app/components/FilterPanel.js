@@ -1,9 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react'; // Added Suspense
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import styles from './FilterPanel.module.css';
 
-const FilterPanel = ({ doctors, updateFilters }) => {
+// Component that uses search params
+function FilterPanelContent({ doctors, updateFilters }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -225,6 +226,15 @@ const FilterPanel = ({ doctors, updateFilters }) => {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main component with Suspense boundary
+const FilterPanel = ({ doctors, updateFilters }) => {
+  return (
+    <Suspense fallback={<div>Loading filters...</div>}>
+      <FilterPanelContent doctors={doctors} updateFilters={updateFilters} />
+    </Suspense>
   );
 };
 

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react'; // Import useCallback
+import { useState, useEffect, useCallback, Suspense } from 'react'; // Added Suspense
 import { useSearchParams } from 'next/navigation';
 import { fetchDoctors } from './utils/api';
 import SearchBar from './components/SearchBar';
@@ -7,7 +7,8 @@ import FilterPanel from './components/FilterPanel';
 import DoctorCard from './components/DoctorCard';
 import styles from './page.module.css';
 
-export default function Home() {
+// Create a component that uses useSearchParams
+function DoctorListWithParams() {
   const searchParams = useSearchParams();
   const [doctors, setDoctors] = useState([]);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
@@ -100,10 +101,10 @@ export default function Home() {
 
   const updateFilters = useCallback((filters) => {
     setActiveFilters(filters);
-  }, []); // Empty dependency array means this function is created once
+  }, []);
 
   return (
-    <main className={styles.main}>
+    <>
       <header className={styles.header}>
         <SearchBar 
           doctors={doctors} 
@@ -115,7 +116,7 @@ export default function Home() {
         <aside className={styles.sidebar}>
           <FilterPanel 
             doctors={doctors} 
-            updateFilters={updateFilters} // Pass the memoized function
+            updateFilters={updateFilters}
           />
         </aside>
         
@@ -135,6 +136,17 @@ export default function Home() {
           )}
         </section>
       </div>
+    </>
+  );
+}
+
+// Main component with Suspense boundary
+export default function Home() {
+  return (
+    <main className={styles.main}>
+      <Suspense fallback={<div className={styles.loading}>Loading...</div>}>
+        <DoctorListWithParams />
+      </Suspense>
     </main>
   );
 }
