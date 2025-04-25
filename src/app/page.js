@@ -1,103 +1,140 @@
-import Image from "next/image";
+'use client';
+import { useState, useEffect, useCallback } from 'react'; // Import useCallback
+import { useSearchParams } from 'next/navigation';
+import { fetchDoctors } from './utils/api';
+import SearchBar from './components/SearchBar';
+import FilterPanel from './components/FilterPanel';
+import DoctorCard from './components/DoctorCard';
+import styles from './page.module.css';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const searchParams = useSearchParams();
+  const [doctors, setDoctors] = useState([]);
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get('search') || ''
+  );
+  
+  const [activeFilters, setActiveFilters] = useState({
+    consultationType: searchParams.get('consultationType') || '',
+    specialties: searchParams.get('specialties') 
+      ? searchParams.get('specialties').split(',') 
+      : [],
+    sortBy: searchParams.get('sortBy') || ''
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+  // Fetch doctors data
+  useEffect(() => {
+    const getDoctors = async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchDoctors();
+        setDoctors(data);
+        setIsLoading(false);
+      } catch (err) {
+        setError('Failed to fetch doctor data. Please try again later.');
+        setIsLoading(false);
+      }
+    };
+
+    getDoctors();
+  }, []);
+
+  // Apply filters and search
+  useEffect(() => {
+    if (!doctors.length) return;
+
+    let result = [...doctors];
+
+    // Apply search filter
+    if (searchQuery) {
+      result = result.filter(doctor => 
+        doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply consultation type filter
+    if (activeFilters.consultationType) {
+      result = result.filter(doctor => 
+        doctor[activeFilters.consultationType] === true
+      );
+    }
+
+    // Apply specialties filter
+    if (activeFilters.specialties.length > 0) {
+      result = result.filter(doctor => 
+        doctor.specialities.some(spec => 
+          activeFilters.specialties.includes(spec.name)
+        )
+      );
+    }
+
+    // Apply sorting
+    if (activeFilters.sortBy) {
+      if (activeFilters.sortBy === 'fees') {
+        // Sort by fees (ascending)
+        result.sort((a, b) => {
+          const feeA = parseInt(a.fees.replace(/[^\d]/g, '') || '0');
+          const feeB = parseInt(b.fees.replace(/[^\d]/g, '') || '0');
+          return feeA - feeB;
+        });
+      } else if (activeFilters.sortBy === 'experience') {
+        // Sort by experience (descending)
+        result.sort((a, b) => {
+          const expA = parseInt(a.experience?.match(/\d+/)?.[0] || '0');
+          const expB = parseInt(b.experience?.match(/\d+/)?.[0] || '0');
+          return expB - expA;
+        });
+      }
+    }
+
+    setFilteredDoctors(result);
+  }, [doctors, searchQuery, activeFilters]);
+
+  const updateSearchQuery = (query) => {
+    setSearchQuery(query);
+  };
+
+  const updateFilters = useCallback((filters) => {
+    setActiveFilters(filters);
+  }, []); // Empty dependency array means this function is created once
+
+  return (
+    <main className={styles.main}>
+      <header className={styles.header}>
+        <SearchBar 
+          doctors={doctors} 
+          updateSearchQuery={updateSearchQuery} 
+        />
+      </header>
+      
+      <div className={styles.container}>
+        <aside className={styles.sidebar}>
+          <FilterPanel 
+            doctors={doctors} 
+            updateFilters={updateFilters} // Pass the memoized function
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </aside>
+        
+        <section className={styles.content}>
+          {isLoading ? (
+            <div className={styles.loading}>Loading doctors...</div>
+          ) : error ? (
+            <div className={styles.error}>{error}</div>
+          ) : filteredDoctors.length === 0 ? (
+            <div className={styles.noResults}>No doctors found matching your criteria.</div>
+          ) : (
+            <div className={styles.doctorList}>
+              {filteredDoctors.map(doctor => (
+                <DoctorCard key={doctor.id} doctor={doctor} />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
   );
 }

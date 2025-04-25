@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    domains: [
+      'doctorlistingingestionpr.azureedge.net',
+      'doctorlistingingestionpr.blob.core.windows.net'
+    ],
+  },
+};
 
 export default nextConfig;

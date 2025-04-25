@@ -1,0 +1,202 @@
+.card {
+  background-color: var(--background-white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Add transition */
+}
+
+.card:hover {
+  transform: translateY(-2px); /* Slight lift on hover */
+  box-shadow: var(--shadow-medium); /* Increase shadow on hover */
+}
+
+.cardContent { /* New style for top section */
+  display: flex;
+  justify-content: space-between; /* Push left and right sections apart */
+  gap: 16px;
+}
+
+.leftSection { /* New style for avatar and main info */
+  display: flex;
+  gap: 16px;
+  flex-grow: 1; /* Allow left section to take available space */
+}
+
+.rightSection { /* New style for fee and button */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align items to the right */
+  justify-content: space-between; /* Space out fee and button */
+  flex-shrink: 0; /* Prevent right section from shrinking */
+  min-width: 150px; /* Ensure enough space for button */
+}
+
+.cardHeader { /* Removed - replaced by leftSection */
+  /* display: flex; */
+  /* gap: 16px; */
+  /* margin-bottom: 16px; */
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative; /* Needed for absolute positioning of fallback */
+  background-color: #eee; /* Background for avatar area */
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarInitials, .avatarInitialsOnError { /* Combined styles */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a4b8d;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  position: absolute; /* Position fallback over image area */
+  top: 0;
+  left: 0;
+}
+
+.avatarInitialsOnError {
+  /* Initially hidden, shown via JS if image fails */
+}
+
+
+.doctorInfo {
+  flex-grow: 1;
+  display: flex; /* Use flexbox for vertical alignment */
+  flex-direction: column; /* Stack info vertically */
+  justify-content: center; /* Center info vertically if needed */
+}
+
+.doctorInfo h3 {
+  margin: 0 0 4px 0; /* Reduced bottom margin */
+  font-size: 16px; /* Slightly smaller name */
+  color: #333;
+  font-weight: bold;
+}
+
+.specialty {
+  font-size: 13px; /* Kept size */
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.qualification {
+  font-size: 12px; /* Kept size */
+  color: #777;
+  margin-bottom: 4px;
+}
+
+.experience {
+  font-size: 12px; /* Kept size */
+  color: #777;
+  margin-bottom: 0; /* Removed bottom margin */
+}
+
+.languages { /* Style removed as element is removed */
+  /* font-size: 12px; */
+  /* color: #777; */
+  /* margin-top: 4px; */
+}
+
+.cardFooter { /* Removed - replaced by rightSection and clinicDetails */
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  /* margin-top: auto; */
+  /* border-top: 1px solid #eee; */
+  /* padding-top: 12px; */
+}
+
+.clinicDetails { /* New style for clinic info */
+  display: flex;
+  gap: 16px; /* Space between clinic name and address */
+  border-top: 1px solid #eee; /* Add separator line */
+  padding-top: 12px; /* Add padding above */
+}
+
+.clinic { /* Removed - replaced by clinicDetails */
+  /* flex-grow: 1; */
+}
+
+.clinicName, .clinicAddress { /* Combined styles */
+  font-size: 13px; /* Matched size */
+  color: #555; /* Matched color */
+  display: flex;
+  align-items: center;
+}
+
+.clinicName {
+  font-weight: normal; /* Removed bold */
+  margin-bottom: 0; /* Removed margin */
+}
+
+.clinicAddress {
+  color: #555; /* Matched color */
+  margin-bottom: 0; /* Removed margin */
+}
+
+.consultation { /* Removed - replaced by rightSection */
+  /* text-align: right; */
+}
+
+.consultationTypes { /* Style kept if needed later */
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  justify-content: flex-end;
+}
+
+.videoConsult, .inClinic { /* Styles kept if needed later */
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.inClinic {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.fee {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0; /* Removed margin */
+  text-align: right; /* Ensure fee aligns right */
+  font-size: 14px; /* Adjusted size */
+}
+
+.bookButton {
+  background-color: transparent;
+  color: #2a4b8d; /* Blue text */
+  border: 1px solid #2a4b8d; /* Blue border */
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  /* width: 100%; */ /* Removed width: 100% */
+  text-align: center;
+  white-space: nowrap; /* Prevent button text wrapping */
+}
+
+.bookButton:hover {
+  background-color: rgba(42, 75, 141, 0.1); /* Light blue hover */
+}
